@@ -1,0 +1,1 @@
+{"version":3,"file":"Background.js","mappings":";;;;;AAAA","sources":["webpack://thoughcrafter/./src/Background.ts"],"sourcesContent":["console.log(\"👨🏿‍🔬 Backdround Service Worker id : 1\");"],"names":[],"sourceRoot":""}

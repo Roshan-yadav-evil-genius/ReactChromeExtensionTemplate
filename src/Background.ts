@@ -1,0 +1,1 @@
+console.log("👨🏿‍🔬 Backdround Service Worker id : 1");
