@@ -8,7 +8,7 @@ module.exports = {
     entry: {
         Popup: './src/Popup.tsx',
         Options: './src/Options.tsx',
-        Content: './src/Content.ts',
+        Content: './src/Content.tsx',
         Background: './src/Background.ts',
     },
     module: {
@@ -44,12 +44,12 @@ module.exports = {
             ],
         }),
         new HtmlWebpackPlugin({
-            template: path.resolve('./src/Base.html'),
+            // template: path.resolve('./src/Base.html'),
             filename: 'Popup.html',
             chunks: ['Popup']
         }),
         new HtmlWebpackPlugin({
-            template: path.resolve('./src/Base.html'),
+            // template: path.resolve('./src/Base.html'),
             filename: 'Options.html',
             chunks: ['Options']
         })
@@ -58,4 +58,7 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].js',
     },
+    resolve: {
+        extensions: ['.ts', '.tsx', '.js', '.jsx'],
+      },
 };

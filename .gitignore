@@ -1,3 +1,4 @@
 # ignore nodemodule folder
 node_modules
 .vscode
+dist

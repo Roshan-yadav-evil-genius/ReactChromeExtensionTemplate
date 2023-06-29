@@ -2,6 +2,56 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/CustomFunctions.ts":
+/*!********************************!*\
+  !*** ./src/CustomFunctions.ts ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   BroadCast: () => (/* binding */ BroadCast),
+/* harmony export */   SendMessageToRuntime: () => (/* binding */ SendMessageToRuntime),
+/* harmony export */   SendMsgToPage: () => (/* binding */ SendMsgToPage)
+/* harmony export */ });
+var SendMsgToPage = function SendMsgToPage(from, msg) {
+  console.log("Sending Message To Page");
+  chrome.tabs.query({}, function (tabs) {
+    tabs.forEach(function (tab) {
+      if (tab.url && tab.id) {
+        if (tab.url.includes("https://")) {
+          // select tabs contain string "https://" in url
+          chrome.tabs.sendMessage(tab.id, {
+            from: from,
+            to: "Content",
+            data: msg
+          }, function (response) {
+            console.log("Sended");
+          });
+        }
+      }
+    });
+  });
+};
+var SendMessageToRuntime = function SendMessageToRuntime(from, to, data) {
+  console.log("Sending", {
+    from: from,
+    to: to,
+    data: data
+  });
+  chrome.runtime.sendMessage({
+    from: from,
+    to: to,
+    data: data
+  });
+};
+var BroadCast = function BroadCast(from, data) {
+  SendMessageToRuntime(from, "Everyone", data);
+  SendMsgToPage(from, data);
+};
+
+/***/ }),
+
 /***/ "./node_modules/react-dom/cjs/react-dom.development.js":
 /*!*************************************************************!*\
   !*** ./node_modules/react-dom/cjs/react-dom.development.js ***!
@@ -33464,12 +33514,35 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
+/* harmony import */ var _CustomFunctions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CustomFunctions */ "./src/CustomFunctions.ts");
+
 
 
 var Popup = function Popup() {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Popup");
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Popup"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    onClick: function onClick() {
+      return (0,_CustomFunctions__WEBPACK_IMPORTED_MODULE_2__.BroadCast)("Background", "hii");
+    }
+  }, "To Background"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    onClick: function onClick() {
+      return (0,_CustomFunctions__WEBPACK_IMPORTED_MODULE_2__.BroadCast)("Popup", "hii");
+    }
+  }, "To Popup"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    onClick: function onClick() {
+      return (0,_CustomFunctions__WEBPACK_IMPORTED_MODULE_2__.BroadCast)("Content", "hii");
+    }
+  }, "To Content"));
 };
+chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+  console.log({
+    ReceivedBy: "Popup",
+    SendedFrom: msg.from,
+    validReceiver: msg.to === "Popup"
+  });
+  sendResponse("ok");
+});
 var root = document.createElement('div');
+root.id = 'root';
 document.body.appendChild(root);
 react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot(root).render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(Popup, null));
 })();
